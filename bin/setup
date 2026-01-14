@@ -15,10 +15,11 @@ FileUtils.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system("bundle check") || system!("bundle install")
 
-  # puts "\n== Copying sample files =="
-  # unless File.exist?("config/database.yml")
-  #   FileUtils.cp "config/database.yml.sample", "config/database.yml"
-  # end
+  puts "\n== Generating SSL certificates =="
+  unless File.exist?("config/ssl/server.key") && File.exist?("config/ssl/server.crt")
+    FileUtils.mkdir_p("config/ssl")
+    system! "openssl req -x509 -newkey rsa:4096 -keyout config/ssl/server.key -out config/ssl/server.crt -days 365 -nodes -subj \"/CN=localhost\""
+  end
 
   puts "\n== Preparing database =="
   system! "bin/rails db:prepare"

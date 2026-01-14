@@ -1,24 +1,43 @@
-# README
+# Gemini on Rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a proof of concept showing how to run a Ruby on Rails application using the Gemini protocol.
 
-Things you may want to cover:
+## Getting Started
 
-* Ruby version
+### Prerequisites
+- Ruby 3.4+
+- OpenSSL (for certificate generation)
 
-* System dependencies
+### Setup
+Run the setup script to install dependencies, prepare the database, and generate SSL certificates:
 
-* Configuration
+```bash
+bin/setup --skip-server
+```
 
-* Database creation
+> [!NOTE]
+> The setup script automatically generates self-signed SSL certificates in `config/ssl/`. This folder is ignored by Git for security and to allow local-only development.
 
-* Database initialization
+### Running the Gemini Server
+Start the Gemini server on the default port (1965):
 
-* How to run the test suite
+```bash
+bin/gemini_server
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### Testing with the Client
+You can use the included test client to verify the connection:
 
-* Deployment instructions
+```bash
+ruby bin/gemini_client.rb gemini://localhost/
+```
 
-* ...
+## Protocol Details
+The Gemini protocol is a lightweight alternative to HTTP. 
+- It requires TLS for all connections.
+- It uses a simplified request/response format.
+- It prioritizes text content (Gemtext).
+- It does not support cookies, JavaScript, or CSS.
+
+## Implementation Notes
+This project uses a custom Rack adapter (`bin/gemini_server`) that translates Gemini requests into Rack calls, allowing Rails controllers to handle them as if they were standard GET requests.
