@@ -48,7 +48,8 @@ loop do
       'rack.multiprocess' => false,
       'rack.run_once'     => false,
       'CONTENT_TYPE'      => 'text/gemini',
-      'HTTP_ACCEPT'      => 'text/gemini'
+      'HTTP_ACCEPT'       => 'text/gemini',
+      'HTTP_HOST'         => uri.host || 'localhost'
     }
 
     puts "Request: #{request.strip}"
