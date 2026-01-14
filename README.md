@@ -19,7 +19,13 @@ bin/setup --skip-server
 > The setup script automatically generates self-signed SSL certificates in `config/ssl/`. This folder is ignored by Git for security and to allow local-only development.
 
 ### Running the Gemini Server
-Start the Gemini server on the default port (1965):
+Start the Gemini server using the standard Rails command:
+
+```bash
+bin/rails server
+```
+
+Alternatively, you can use the direct script:
 
 ```bash
 bin/gemini_server

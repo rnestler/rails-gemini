@@ -1,4 +1,11 @@
 #!/usr/bin/env ruby
 APP_PATH = File.expand_path("../config/application", __dir__)
 require_relative "../config/boot"
-require "rails/commands"
+
+if ARGV[0] == "server" || ARGV[0] == "s"
+  require_relative "../config/environment"
+  require_relative "../lib/gemini/server"
+  Gemini::Server.start(Rails.application)
+else
+  require "rails/commands"
+end
