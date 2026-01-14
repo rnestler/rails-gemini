@@ -51,13 +51,13 @@ loop do
       'HTTP_ACCEPT'      => 'text/gemini'
     }
 
+    puts "Request: #{request.strip}"
     status, headers, body = Rails.application.call(env)
-
+    # Status is status code, headers is a Hash, body is an Enumerable
+    
     # Translate Rack response to Gemini
     # Gemini Status Codes:
     # 20 <MIME> \r\n <BODY> (Success)
-    # 3x <URL> (Redirect)
-    # 5x <MSG> (Error)
     
     gemini_status = case status
                     when 200..299 then "20"
@@ -66,15 +66,17 @@ loop do
                     else "40"
                     end
 
+    puts "Response Status: #{status} -> Gemini: #{gemini_status}"
+
     if gemini_status == "20"
       mime_type = headers['Content-Type']&.split(';')&.first || 'text/gemini'
-      client.puts "#{gemini_status} #{mime_type}"
+      client.print "#{gemini_status} #{mime_type}\r\n"
       body.each { |part| client.print part }
     elsif gemini_status == "30"
       location = headers['Location']
-      client.puts "#{gemini_status} #{location}"
+      client.print "#{gemini_status} #{location}\r\n"
     else
-      client.puts "#{gemini_status} Server Error"
+      client.print "#{gemini_status} Server Error\r\n"
     end
 
     client.close
